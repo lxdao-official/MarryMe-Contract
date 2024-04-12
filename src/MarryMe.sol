@@ -6,17 +6,16 @@ import { ISP } from "@ethsign/sign-protocol-evm/src/interfaces/ISP.sol";
 import { Attestation } from "@ethsign/sign-protocol-evm/src/models/Attestation.sol";
 import { DataLocation } from "@ethsign/sign-protocol-evm/src/models/DataLocation.sol";
 
-// [x] Have a way to link to the existing on-chain SP instance and schema
-// [x] Force both parties to confirm they've met each other IRL before making an attestation
-
-contract ActuallyMetIRL is Ownable {
+contract MarryMe is Ownable {
     ISP public spInstance;
     uint64 public schemaId;
-    mapping(address partyA => address partyB) public metIRLMapping;
+
+    mapping(address => address) public proposalMapping;
+    mapping(address => string) public proposalInfo;
 
     error ConfirmationAddressMismatch();
 
-    event DidMeetIRL(address partyA, address partyB, uint64 attestationId);
+    event DidSignProposal(address addressA, address addressB, uint64 attestationId);
 
     constructor() Ownable(_msgSender()) { }
 
@@ -28,18 +27,23 @@ contract ActuallyMetIRL is Ownable {
         schemaId = schemaId_;
     }
 
-    function claimMetIRL(address partyB) external {
-        metIRLMapping[_msgSender()] = partyB;
+    function submitProposal(address addressB, string memory infoA) external {
+        proposalMapping[_msgSender()] = addressB;
+        proposalInfo[_msgSender()] = infoA;
     }
 
-    function confirmMetIRL(address partyA, bytes memory data) external returns (uint64) {
-        address partyB = _msgSender();
-        if (metIRLMapping[partyA] == partyB) {
-            // B has confirm A's claim of having met them IRL
-            // We now make an attestation of having actually met IRL
+    function confirmProposal(address addressA, string memory infoB) external returns (uint64) {
+        address addressB = _msgSender();
+        string memory infoA = proposalInfo[addressA];
+        string memory infoB = proposalInfo[addressB];
+
+        bytes memory data = abi.encode(infoA, infoB);
+
+        if (proposalMapping[addressA] == addressB) {
+            // B has confirm A's marriage proposal
             bytes[] memory recipients = new bytes[](2);
-            recipients[0] = abi.encode(partyA);
-            recipients[1] = abi.encode(partyB);
+            recipients[0] = abi.encode(addressA);
+            recipients[1] = abi.encode(addressB);
             Attestation memory a = Attestation({
                 schemaId: schemaId,
                 linkedAttestationId: 0,
@@ -50,10 +54,10 @@ contract ActuallyMetIRL is Ownable {
                 dataLocation: DataLocation.ONCHAIN,
                 revoked: false,
                 recipients: recipients,
-                data: data // SignScan assumes this is from `abi.encode(...)`
-             });
+                data: data
+            });
             uint64 attestationId = spInstance.attest(a, "", "", "");
-            emit DidMeetIRL(partyA, partyB, attestationId);
+            emit DidSignProposal(addressA, addressB, attestationId);
             return attestationId;
         } else {
             revert ConfirmationAddressMismatch();

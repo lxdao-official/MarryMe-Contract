@@ -2,7 +2,7 @@
 import {ethers} from 'hardhat'
 
 async function main() {
-    const Factory = await ethers.getContractFactory('ActuallyMetIRL')
+    const Factory = await ethers.getContractFactory('MarryMe')
     const instance = await Factory.deploy()
     const contract = await instance.waitForDeployment()
     console.log(await contract.getAddress())
