@@ -33,11 +33,17 @@ contract MarryMe is Ownable {
     }
 
     function confirmProposal(address addressA, string memory infoB) external returns (uint64) {
+        //   real schema is :[{"name":"addressA","type":"address"},{"name":"addressB","type":"address"},{"name":"infoA","type":"string"},{"name":"infoB","type":"string"}]
         address addressB = _msgSender();
         string memory infoA = proposalInfo[addressA];
-        string memory infoB = proposalInfo[addressB];
 
-        bytes memory data = abi.encode(infoA, infoB);
+        bytes memory data =  
+            abi.encode(
+                addressA,
+                addressB,
+                infoA,
+                infoB
+            );
 
         if (proposalMapping[addressA] == addressB) {
             // B has confirm A's marriage proposal

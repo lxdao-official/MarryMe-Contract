@@ -1,14 +1,13 @@
-import {HardhatUserConfig} from 'hardhat/config'
-import {config as configENV} from 'dotenv'
+import { HardhatUserConfig } from 'hardhat/config'
+import { config as configENV } from 'dotenv'
 import '@nomicfoundation/hardhat-foundry'
 import '@nomicfoundation/hardhat-toolbox'
 import '@openzeppelin/hardhat-upgrades'
 import 'solidity-docgen'
 import 'hardhat-deploy'
 
-if (process.env.NODE_ENV !== 'PRODUCTION') {
-    configENV()
-}
+configENV()
+
 
 const config: HardhatUserConfig = {
     namedAccounts: {
@@ -84,6 +83,13 @@ const config: HardhatUserConfig = {
             chainId: 84532,
             url: 'https://sepolia.base.org',
             accounts: [process.env.PRIVATE_KEY!],
+            saveDeployments: true,
+            zksync: false
+        },
+        sepolia: {
+            chainId: 11155111,
+            url: process.env.SEPOLIA_RPC!,
+            accounts: [process.env.PRIVATE_KEY!, process.env.PRIVATE_KEY2!],
             saveDeployments: true,
             zksync: false
         }
