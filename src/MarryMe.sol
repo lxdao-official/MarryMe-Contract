@@ -33,7 +33,8 @@ contract MarryMe is Ownable {
     }
 
     function confirmProposal(address addressA, string memory infoB) external returns (uint64) {
-        //   real schema is :[{"name":"addressA","type":"address"},{"name":"addressB","type":"address"},{"name":"infoA","type":"string"},{"name":"infoB","type":"string"}]
+        // test schema: https://testnet-scan.sign.global/schema/onchain_evm_11155111_0x7
+        // real schema is : [{"name":"addressA","type":"address"},{"name":"addressB","type":"address"},{"name":"infoA","type":"string"},{"name":"infoB","type":"string"}]
         address addressB = _msgSender();
         string memory infoA = proposalInfo[addressA];
 
