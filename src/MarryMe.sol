@@ -5,6 +5,7 @@ import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { ISP } from "@ethsign/sign-protocol-evm/src/interfaces/ISP.sol";
 import { Attestation } from "@ethsign/sign-protocol-evm/src/models/Attestation.sol";
 import { DataLocation } from "@ethsign/sign-protocol-evm/src/models/DataLocation.sol";
+import "hardhat/console.sol";
 
 contract MarryMe is Ownable {
     ISP public spInstance;
@@ -36,7 +37,11 @@ contract MarryMe is Ownable {
         // test schema: https://testnet-scan.sign.global/schema/onchain_evm_11155111_0x7
         // real schema is : [{"name":"addressA","type":"address"},{"name":"addressB","type":"address"},{"name":"infoA","type":"string"},{"name":"infoB","type":"string"}]
         address addressB = _msgSender();
+
+        console.log("addressA: ", addressA);
         string memory infoA = proposalInfo[addressA];
+
+        console.log("addressB: ", addressB);
 
         bytes memory data =  
             abi.encode(
