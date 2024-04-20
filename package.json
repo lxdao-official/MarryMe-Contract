@@ -16,7 +16,8 @@
     "prettier:write": "prettier --write **/*.{json,md,yml,ts} --ignore-path=.prettierignore",
     "test": "forge test",
     "test:coverage": "forge coverage",
-    "test:gas": "forge test --gas-report"
+    "test:gas": "forge test --gas-report",
+    "deploy": "npx hardhat run scripts/01-deploy.ts --network base"
   },
   "author": "",
   "license": "ISC",

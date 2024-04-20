@@ -5,54 +5,58 @@ async function main() {
 
     const [deployer, deployer2] = await ethers.getSigners()
 
+
+
+    console.log('addressA:', deployer.getAddress())
+    console.log('addressB:', deployer2.getAddress())
+
     const Factory = await ethers.getContractFactory('MarryMe')
     const instance = await Factory.deploy()
     const contract = await instance.waitForDeployment()
     console.log(await contract.getAddress())
 
-    console.log('addressA:', deployer.getAddress())
-    console.log('addressB:', deployer2.getAddress())
-
     const addressA = await deployer.getAddress();
-    const addressB = await deployer2.getAddress();
+    // const addressB = await deployer2.getAddress();
 
-    await contract.setSPInstance('0x878c92FD89d8E0B93Dc0a3c907A2adc7577e39c5')
+    // await contract.setSPInstance('0x878c92FD89d8E0B93Dc0a3c907A2adc7577e39c5') //sepolia
+    await contract.setSPInstance('0x2b3224D080452276a76690341e5Cfa81A945a985') //base
 
     console.log('setSPInstance done')
 
-    await contract.setSchemaID('0x7')
+    // await contract.setSchemaID('0x7') // sepolia
+    await contract.setSchemaID('0x15') // base
 
     console.log('setSchemaID done')
 
-    // submitProposal
-    await (await contract.submitProposal(addressB, 'hello world B')).wait()
+    // // submitProposal
+    // await (await contract.submitProposal(addressB, 'hello world B')).wait()
 
-    console.log('submitProposal done')
+    // console.log('submitProposal done')
 
-    // 查询某个地址发送的所有求婚信息
-    const proposalSubmitted = await contract.getProposalsSentBy(addressA)
-    console.log('proposal submit by addressA:', JSON.stringify(proposalSubmitted, null, 2))
+    // // 查询某个地址发送的所有求婚信息
+    // const proposalSubmitted = await contract.getProposalsSentBy(addressA)
+    // console.log('proposal submit by addressA:', JSON.stringify(proposalSubmitted, null, 2))
 
-    // 查询某个地址收到的所有求婚信息
-    const info = await contract.getProposalsReceivedBy(addressB);
-    console.log('proposal received by addressB:', JSON.stringify(info, null, 2))
+    // // 查询某个地址收到的所有求婚信息
+    // const info = await contract.getProposalsReceivedBy(addressB);
+    // console.log('proposal received by addressB:', JSON.stringify(info, null, 2))
 
-    // switch to addressB to accept the proposal
-    const confirm = await contract.connect(deployer2).confirmProposal(addressA, 'hello world A')
-    await confirm.wait()
-    console.log('acceptProposal done:')
+    // // switch to addressB to accept the proposal
+    // const confirm = await contract.connect(deployer2).confirmProposal(addressA, 'hello world A')
+    // await confirm.wait()
+    // console.log('acceptProposal done:')
 
-    // 查询某个地址的婚姻状态，返回 attestationId
-    const attestationId = await contract.getMarryAttestationId(addressA)
-    console.log('attestationID:', attestationId);
+    // // 查询某个地址的婚姻状态，返回 attestationId
+    // const attestationId = await contract.getMarryAttestationId(addressA)
+    // console.log('attestationID:', attestationId);
 
-    // 查询某个地址的婚姻状态，返回 attestation 详细信息
-    const attestation = await contract.getMarryAttestation(addressA);
-    console.log('attestation:', attestation)
+    // // 查询某个地址的婚姻状态，返回 attestation 详细信息
+    // const attestation = await contract.getMarryAttestation(addressA);
+    // console.log('attestation:', attestation)
 
-    // 查询某个地址的婚姻状态，返回 true/false
-    const isMarried = await contract.checkMarried(addressA)
-    console.log('isMarried:', isMarried)
+    // // 查询某个地址的婚姻状态，返回 true/false
+    // const isMarried = await contract.checkMarried(addressA)
+    // console.log('isMarried:', isMarried)
 
     /**
      * output example:

@@ -92,6 +92,11 @@ const config: HardhatUserConfig = {
             accounts: [process.env.PRIVATE_KEY!, process.env.PRIVATE_KEY2!],
             saveDeployments: true,
             zksync: false
+        },
+        base: {
+            chainId: 8453,
+            url: 'https://base.llamarpc.com',
+            accounts: [process.env.PRIVATE_KEY!, process.env.PRIVATE_KEY2!],
         }
     },
     etherscan: {
